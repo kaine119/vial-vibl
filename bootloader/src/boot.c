@@ -57,14 +57,9 @@ void setInsecureFlag(void) {
 }
 
 int checkKbMatrix(void) {
-    /* output low on the row_pin */
-    BL_ROW_BANK->BRR = (1U << BL_ROW_PIN);
-
-    /* delay for change to propagate */
-    for (volatile int delay = 0; delay < 1000; ++delay) {}
-
     /* read and check col_pin */
-    return !(BL_COL_BANK->IDR & (1U << BL_COL_PIN));
+    /* if it's high, we need to jump to bootloader */
+    return BL_BANK->IDR & (1U << BL_PIN);
 }
 
 #define CR_INPUT_PU_PD      0x08
@@ -94,12 +89,8 @@ void setupGPIO(void) {
     /* Disable JTAG to release PB3, PB4, PA15 */
     AFIO->MAPR = AFIO_MAPR_SWJ_CFG_JTAGDISABLE;
 
-    /* Set col_pin as pullup input */
-    cr = *GPIO_CR(BL_COL_BANK,BL_COL_PIN) & crMask(BL_COL_PIN);
-    *GPIO_CR(BL_COL_BANK,BL_COL_PIN) = cr | CR_INPUT_PU_PD << CR_SHITF(BL_COL_PIN);
-    BL_COL_BANK->BSRR = (1U << BL_COL_PIN);
-
-    /* Set row_pin as output */
-    cr = *GPIO_CR(BL_ROW_BANK,BL_ROW_PIN) & crMask(BL_ROW_PIN);
-    *GPIO_CR(BL_ROW_BANK,BL_ROW_PIN) = cr | CR_OUTPUT_PP << CR_SHITF(BL_ROW_PIN);
+    /* Set bootloader pin as pullup input */
+    cr = *GPIO_CR(BL_BANK,BL_PIN) & crMask(BL_PIN);
+    *GPIO_CR(BL_BANK,BL_PIN) = cr | CR_INPUT_PU_PD << CR_SHITF(BL_PIN);
+    BL_BANK->BSRR = (1U << BL_PIN);
 }

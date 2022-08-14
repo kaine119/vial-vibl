@@ -8,18 +8,18 @@
 
 #if defined(TARGET_GENERIC)
 #define VIAL_KEYBOARD_UID {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}
-/* setup for bluepill */
-#define BL_COL_BANK GPIOB
-#define BL_COL_PIN 12
-#define BL_ROW_BANK GPIOB
-#define BL_ROW_PIN 13
+/* setup for bluepill bootloader without vial */
+/* to jump to bootloader, set the BOOT1 jumper to 1. */
+#define BL_BANK GPIOB
+#define BL_PIN 2
+/* end TARGET_GENERIC */
+
 #elif defined(TARGET_VIAL_TEST)
 #define VIAL_KEYBOARD_UID {0x6F, 0xC5, 0xEE, 0x60, 0x90, 0x92, 0x53, 0xA4}
-/* setup for bluepill */
-#define BL_COL_BANK GPIOB
-#define BL_COL_PIN 12
-#define BL_ROW_BANK GPIOB
-#define BL_ROW_PIN 13
+/* setup for bluepill vial test */
+/* to jump to bootloader, set the BOOT1 jumper to 1. */
+#define BL_BANK GPIOB
+#define BL_PIN 2
 #else
 #error Unknown target
 #endif
